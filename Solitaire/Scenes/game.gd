@@ -7,7 +7,6 @@ func load_resources():
 	
 func init_game():
 	var deck : Deck = Deck.create_deck()
-	deck.shuffle()
 	$CanvasLayer.add_child(deck)
 
 func _ready():

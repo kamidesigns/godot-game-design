@@ -10,20 +10,25 @@ var cards = []
 
 var rng = RandomNumberGenerator.new()
 
-func _ready():
-	for suit in suits:
-		for rank in ranks:
-			var card : Card = Card.create_card(suit, rank)
-			card.position = Vector2(200,200)
+func _enter_tree():
+	for i in len(suits):
+		for j in len(ranks):
+			var card : Card = Card.create_card(suits[i], ranks[j])
+			card.position = Vector2(200 - ((len(ranks) * i + j) / 4),200 - ((len(ranks) * i + j) / 4))
 			add_child(card)
+	shuffle()
 
 func shuffle():
-	for i in range(get_children().size() - 1):
+	for i in range(get_children().size()):
 		var random_index = rng.randi_range(0, i + 1)
 		var child1 : Node = get_child(i)
 		var child2 : Node = get_child(random_index)
 		move_child(child1, random_index)
 		move_child(child2, i)
+		var old_position : Vector2 = child1.position
+		child1.position = child2.position
+		child2.position = old_position
+		
 
 static func create_deck() -> Deck:
 	var new_deck: Deck = my_scene.instantiate()
