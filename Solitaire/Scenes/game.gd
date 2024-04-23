@@ -7,6 +7,7 @@ func load_resources():
 	
 func init_game():
 	var deck : Deck = Deck.create_deck()
+	deck.position = Vector2(500,500)
 	$CanvasLayer.add_child(deck)
 
 func _ready():

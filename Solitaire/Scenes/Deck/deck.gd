@@ -1,8 +1,6 @@
 extends Node2D
 class_name Deck
 
-const my_scene: PackedScene = preload("res://Scenes/Deck/deck.tscn")
-
 const suits = ["Clubs", "Spades", "Hearts", "Diamonds"]
 const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
 
@@ -14,7 +12,7 @@ func _enter_tree():
 	for i in len(suits):
 		for j in len(ranks):
 			var card : Card = Card.create_card(suits[i], ranks[j])
-			card.position = Vector2(200 - ((len(ranks) * i + j) / 4),200 - ((len(ranks) * i + j) / 4))
+			card.position = Vector2(-((len(ranks) * i + j) / 4), -((len(ranks) * i + j) / 4))
 			add_child(card)
 	shuffle()
 
@@ -31,6 +29,6 @@ func shuffle():
 		
 
 static func create_deck() -> Deck:
-	var new_deck: Deck = my_scene.instantiate()
+	var new_deck: Deck = load("res://Scenes/Deck/deck.tscn").instantiate()
 	return new_deck
 
