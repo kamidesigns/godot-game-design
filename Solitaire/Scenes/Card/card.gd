@@ -1,8 +1,6 @@
 extends Node2D
 class_name Card
 
-const my_scene: PackedScene = preload("res://Scenes/Card/card.tscn")
-
 var front_texture : Texture2D
 var back_texture : Texture2D
 
@@ -20,8 +18,15 @@ func flip():
 	flipped = !flipped
 	update_texture()
 
+func is_black():
+	return suit == "Clubs" || suit == "Spades"
+
+func is_red():
+	return suit == "Hearts" || suit == "Diamonds"
+
 static func create_card(_suit: String, _rank: String) -> Card:
-	var new_card: Card = my_scene.instantiate()
+	
+	var new_card: Card = load("res://Scenes/Card/card.tscn").instantiate()
 	new_card.rank = _rank
 	new_card.suit = _suit
 	

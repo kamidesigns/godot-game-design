@@ -1,21 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bh2g5wem653uw"]
+[gd_scene load_steps=2 format=3 uid="uid://bh2g5wem653uw"]
 
 [ext_resource type="Script" path="res://Scenes/Card/card.gd" id="1_fvkdt"]
-[ext_resource type="Script" path="res://Scenes/Components/drag_component.gd" id="3_aqtmv"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ntk6v"]
-size = Vector2(140, 190)
 
 [node name="Card" type="Node2D"]
 script = ExtResource("1_fvkdt")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 unique_name_in_owner = true
-
-[node name="DragComponent" type="Area2D" parent="."]
-script = ExtResource("3_aqtmv")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DragComponent"]
-shape = SubResource("RectangleShape2D_ntk6v")
-
-[connection signal="input_event" from="DragComponent" to="." method="_on_input_event"]
