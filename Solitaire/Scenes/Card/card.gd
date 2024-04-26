@@ -25,16 +25,16 @@ func is_red():
 	return suit == "Hearts" || suit == "Diamonds"
 
 static func create_card(_suit: String, _rank: String) -> Card:
-	
+
 	var new_card: Card = load("res://Scenes/Card/card.tscn").instantiate()
 	new_card.rank = _rank
 	new_card.suit = _suit
-	
+
 	new_card.set_name("card" + _suit + _rank)
 
 	new_card.front_texture = load("res://Media/Cards/PNG/Cards/card" + _suit + _rank + ".png")
 	new_card.back_texture = load("res://Media/Cards/PNG/Cards/cardBack_blue5.png")
-	
+
 	new_card.update_texture()
 
 	return new_card
@@ -44,3 +44,4 @@ func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
 		if Input.is_action_just_pressed('flip'):
 			flip()
+

@@ -17,7 +17,7 @@ func _enter_tree():
 	shuffle()
 
 func shuffle():
-	for i in range(get_children().size()):
+	for i in range(get_children().size() - 1):
 		var random_index = rng.randi_range(0, i + 1)
 		var child1 : Node = get_child(i)
 		var child2 : Node = get_child(random_index)
@@ -26,7 +26,11 @@ func shuffle():
 		var old_position : Vector2 = child1.position
 		child1.position = child2.position
 		child2.position = old_position
-		
+
+func draw() -> Card:
+	var card = get_child(-1)
+	remove_child(card)
+	return card
 
 static func create_deck() -> Deck:
 	var new_deck: Deck = load("res://Scenes/Deck/deck.tscn").instantiate()
