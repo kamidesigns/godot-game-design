@@ -24,6 +24,10 @@ func is_black():
 func is_red():
 	return suit == "Hearts" || suit == "Diamonds"
 
+func make_draggable():
+	var drag_component : DragComponent = load("res://Scenes/Components/drag_component.tscn").instantiate()
+	add_child(drag_component)
+
 static func create_card(_suit: String, _rank: String) -> Card:
 
 	var new_card: Card = load("res://Scenes/Card/card.tscn").instantiate()

@@ -22,6 +22,7 @@ func init_game():
 			tween.tween_property(card, "position:y", 200 + (j * 40), 0.05)
 			if j == i:
 				card.flip()
+				card.make_draggable()
 			await tween.finished
 
 

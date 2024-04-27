@@ -5,6 +5,7 @@ class_name DragComponent
 
 var dragging : bool = false
 var offset : Vector2 = Vector2.ZERO
+var previous_position : Vector2 = Vector2.ZERO
 
 func _enter_tree() -> void:
 	connect("input_event", _on_input_event)
@@ -33,11 +34,13 @@ func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
 		if Input.is_action_just_pressed('click'):
 			if is_on_top():
+				previous_position = get_parent().global_position
 				dragging = true
 				offset = get_parent().global_position - get_global_mouse_position()
 		if Input.is_action_just_released('click'):
 			dragging = false
 			offset = Vector2.ZERO
+			get_parent().global_position = previous_position
 
 func is_on_top():
 	var group_nodes = get_tree().get_nodes_in_group("dragable_hovered")
