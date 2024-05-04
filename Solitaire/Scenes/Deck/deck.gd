@@ -12,7 +12,7 @@ func _enter_tree():
 	for i in len(suits):
 		for j in len(ranks):
 			var card : Card = Card.create_card(suits[i], ranks[j])
-			card.position = Vector2(-((len(ranks) * i + j) / 4), -((len(ranks) * i + j) / 4))
+			card.position = Vector2(-((len(ranks) * i + j) / 4.0), -((len(ranks) * i + j) / 4.0))
 			add_child(card)
 	shuffle()
 
@@ -34,5 +34,6 @@ func draw() -> Card:
 
 static func create_deck() -> Deck:
 	var new_deck: Deck = load("res://Scenes/Deck/deck.tscn").instantiate()
+	new_deck.set_name("deck")
 	return new_deck
 
