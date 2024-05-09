@@ -1,7 +1,7 @@
 [submodule "Solitaire/godot-cpp"]
 	path = Solitaire/godot-cpp
 	url = https://github.com/godotengine/godot-cpp
-	branch = 4.2
+	branch = godot-4.2.2-stable
 [submodule "Solitaire/modules/flecs"]
 	path = Solitaire/modules/flecs
 	url = https://github.com/SanderMertens/flecs
