@@ -25,11 +25,18 @@ func is_red():
 	return suit == "Hearts" || suit == "Diamonds"
 
 func make_draggable():
-	var drag_component : DragComponent = load("res://Scenes/Components/drag_component.tscn").instantiate()
-	add_child(drag_component)
+	add_to_group("dragable")
+
+func remove_draggable():
+	remove_from_group("dragable")
+
+func make_droppable():
+	add_to_group("droppable")
+
+func remove_droppable():
+	remove_from_group("droppable")
 
 static func create_card(_suit: String, _rank: String) -> Card:
-
 	var new_card: Card = load("res://Scenes/Card/card.tscn").instantiate()
 	new_card.rank = _rank
 	new_card.suit = _suit
@@ -49,3 +56,5 @@ func _on_input_event(_viewport, event, _shape_idx):
 		if Input.is_action_just_pressed('flip'):
 			flip()
 
+func is_mouse_hover(mouse_position : Vector2):
+	return mouse_position.x > global_position.x - ($Sprite2D.texture.get_width() / 2) && mouse_position.x < global_position.x + ($Sprite2D.texture.get_width() / 2) && mouse_position.y > global_position.y - ($Sprite2D.texture.get_height() / 2) && mouse_position.y < global_position.y + ($Sprite2D.texture.get_height() / 2)

@@ -4,7 +4,7 @@ class_name Deck
 const suits = ["Clubs", "Spades", "Hearts", "Diamonds"]
 const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
 
-var cards = []
+var cards : Array[Card] = []
 
 var rng = RandomNumberGenerator.new()
 
@@ -13,6 +13,7 @@ func _enter_tree():
 		for j in len(ranks):
 			var card : Card = Card.create_card(suits[i], ranks[j])
 			card.position = Vector2(-((len(ranks) * i + j) / 4.0), -((len(ranks) * i + j) / 4.0))
+			cards.append(card)
 			add_child(card)
 	shuffle()
 
@@ -30,10 +31,16 @@ func shuffle():
 func draw() -> Card:
 	var card = get_child(-1)
 	remove_child(card)
+	cards.remove_at(cards.find(card))
 	return card
+
+func card_in_deck(card : Card):
+	return cards.has(card)
+
+func get_cards() -> Array[Card]:
+	return cards
 
 static func create_deck() -> Deck:
 	var new_deck: Deck = load("res://Scenes/Deck/deck.tscn").instantiate()
 	new_deck.set_name("deck")
 	return new_deck
-
