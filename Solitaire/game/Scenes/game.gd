@@ -1,22 +1,22 @@
 extends Node2D
 
-var init_done : bool = true
+var init_done: bool = true
 
-var card_hovering : Card = null
+var card_hovering: Card = null
 
-var mouse_move_events : Array[InputEventMouseMotion] = []
-var mouse_button_events : Array[InputEventMouseButton] = []
+var mouse_move_events: Array[InputEventMouseMotion] = []
+var mouse_button_events: Array[InputEventMouseButton] = []
 
-var mouse_position : Vector2 = Vector2(0, 0)
-var cards_hovering : Array[Card] = []
-var top_card_hovering : Card = null
+var mouse_position: Vector2 = Vector2(0, 0)
+var cards_hovering: Array[Card] = []
+var top_card_hovering: Card = null
 
-var deck : Deck = null
+var deck: Deck = null
 
-var all_interactables : Array[Card] = []
+var all_interactables: Array[Card] = []
 
-var card_dragging : Card = null
-var card_dragging_previous_position : Vector2 = Vector2(0,0)
+var card_dragging: Card = null
+var card_dragging_previous_position: Vector2 = Vector2(0, 0)
 
 func init_game():
 	var foundation_pile_hearts = Card.create_card("Hearts", "A")
@@ -49,7 +49,7 @@ func init_game():
 	$CanvasLayer.add_child(foundation_pile_spades)
 
 	deck = Deck.create_deck()
-	deck.position = Vector2(200,500)
+	deck.position = Vector2(200, 500)
 	$CanvasLayer.add_child(deck)
 	for card in deck.get_cards():
 		all_interactables.append(card)
@@ -82,7 +82,7 @@ func _input(event):
 		mouse_button_events.append(event)
 	if (event is InputEventKey):
 		var key_event = event as InputEventKey
-		if(key_event.keycode == 4194305):
+		if (key_event.keycode == 4194305):
 			get_tree().quit()
 
 func _process(_delta):
@@ -97,17 +97,17 @@ func _process(_delta):
 	mouse_button_events.clear()
 
 func process_input_system():
-	
+	pass
 
 func process_mouse_follow_system():
-	var last_mouse_move_event_this_frame : InputEventMouseMotion = mouse_move_events.pop_back()
+	var last_mouse_move_event_this_frame: InputEventMouseMotion = mouse_move_events.pop_back()
 	if (!last_mouse_move_event_this_frame): return
 	mouse_position = last_mouse_move_event_this_frame.position
 
 func process_cards_hovering_system():
 	cards_hovering.clear()
 	for card in all_interactables:
-		if(card.is_mouse_hover(mouse_position) && card.is_in_group("dragable")):
+		if (card.is_mouse_hover(mouse_position) && card.is_in_group("dragable")):
 			cards_hovering.append(card)
 	cards_hovering.sort_custom(custom_array_sort)
 	if !cards_hovering.is_empty():
@@ -115,18 +115,18 @@ func process_cards_hovering_system():
 	else:
 		top_card_hovering = null
 
-func custom_array_sort(a : Card, b : Card):
+func custom_array_sort(a: Card, b: Card):
 	return a.get_index() < b.get_index()
 
 func process_drag_system():
 	for event in mouse_button_events:
-		if(event.button_index == 1 && event.pressed && card_dragging == null && top_card_hovering):
+		if (event.button_index == 1 && event.pressed && card_dragging == null && top_card_hovering):
 			card_dragging = top_card_hovering
 			card_dragging_previous_position = card_dragging.global_position
 		#if(event.button_index == 1 && !event.pressed && card_dragging != null):
 			#card_dragging.global_position = card_dragging_previous_position
 			#card_dragging = null
-	if(card_dragging):
+	if (card_dragging):
 		card_dragging.global_position.x = mouse_position.x
 		card_dragging.global_position.y = mouse_position.y
 
