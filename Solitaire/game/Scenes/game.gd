@@ -6,6 +6,8 @@ var card_hovering: Card = null
 
 var mouse_move_events: Array[InputEventMouseMotion] = []
 var mouse_button_events: Array[InputEventMouseButton] = []
+var filtered_mouse_button_events: Array[InputEventMouseButton] = []
+
 
 var mouse_position: Vector2 = Vector2(0, 0)
 var cards_hovering: Array[Card] = []
@@ -91,13 +93,23 @@ func _process(_delta):
 	process_input_system()
 	process_mouse_follow_system()
 	process_cards_hovering_system()
+	process_press_release()
 	process_drag_system()
 	process_cards_scaling()
 	mouse_move_events.clear()
 	mouse_button_events.clear()
+	filtered_mouse_button_events.clear()
 
 func process_input_system():
-	pass
+	var pressed_buttons = {}
+	for event in mouse_button_events:
+		if (pressed_buttons.has(event.button_index) && pressed_buttons[event.button_index].pressed == !event.pressed):
+			pressed_buttons.erase(event.button_index)
+			continue
+		else:
+			pressed_buttons[event.button_index] = event
+	for button in pressed_buttons:
+		filtered_mouse_button_events.append(pressed_buttons[button])
 
 func process_mouse_follow_system():
 	var last_mouse_move_event_this_frame: InputEventMouseMotion = mouse_move_events.pop_back()
@@ -118,14 +130,16 @@ func process_cards_hovering_system():
 func custom_array_sort(a: Card, b: Card):
 	return a.get_index() < b.get_index()
 
-func process_drag_system():
-	for event in mouse_button_events:
-		if (event.button_index == 1 && event.pressed && card_dragging == null && top_card_hovering):
+func process_press_release():
+	for event in filtered_mouse_button_events:
+		if (event.button_index == 1 && event.pressed && top_card_hovering):
 			card_dragging = top_card_hovering
 			card_dragging_previous_position = card_dragging.global_position
-		#if(event.button_index == 1 && !event.pressed && card_dragging != null):
-			#card_dragging.global_position = card_dragging_previous_position
-			#card_dragging = null
+		if (event.button_index == 1 && !event.pressed && card_dragging):
+			card_dragging.global_position = card_dragging_previous_position
+			card_dragging = null
+
+func process_drag_system():
 	if (card_dragging):
 		card_dragging.global_position.x = mouse_position.x
 		card_dragging.global_position.y = mouse_position.y
