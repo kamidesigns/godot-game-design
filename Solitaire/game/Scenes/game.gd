@@ -19,6 +19,7 @@ var all_interactables: Array[Card] = []
 
 var card_dragging: Card = null
 var card_dragging_previous_position: Vector2 = Vector2(0, 0)
+var card_released: Card = null
 
 func init_game():
 	var foundation_pile_hearts = Card.create_card("Hearts", "A")
@@ -65,7 +66,7 @@ func init_game():
 			await tween.finished
 			card.position = Vector2(500 + (i * 200), 1400)
 			tween = $CanvasLayer.create_tween()
-			tween.tween_property(card, "position:y", deck.position.y + (j * 40), 0.05)
+			tween.tween_property(card, "position:y", deck.position.y + (j * 60), 0.05)
 			if j == i:
 				card.flip()
 				card.make_draggable()
@@ -95,6 +96,7 @@ func _process(_delta):
 	process_cards_hovering_system()
 	process_press_release()
 	process_drag_system()
+	process_release_system()
 	process_cards_scaling()
 	mouse_move_events.clear()
 	mouse_button_events.clear()
@@ -122,13 +124,16 @@ func process_cards_hovering_system():
 		if (card.is_mouse_hover(mouse_position) && card.is_in_group("dragable")):
 			cards_hovering.append(card)
 	cards_hovering.sort_custom(custom_array_sort)
+	if (card_dragging):
+		top_card_hovering = card_dragging
+		return
 	if !cards_hovering.is_empty():
-		top_card_hovering = cards_hovering.back()
+		top_card_hovering = cards_hovering.front()
 	else:
 		top_card_hovering = null
 
 func custom_array_sort(a: Card, b: Card):
-	return a.get_index() < b.get_index()
+	return a.get_index() > b.get_index()
 
 func process_press_release():
 	for event in filtered_mouse_button_events:
@@ -136,13 +141,31 @@ func process_press_release():
 			card_dragging = top_card_hovering
 			card_dragging_previous_position = card_dragging.global_position
 		if (event.button_index == 1 && !event.pressed && card_dragging):
-			card_dragging.global_position = card_dragging_previous_position
-			card_dragging = null
+			card_released = card_dragging
 
 func process_drag_system():
 	if (card_dragging):
+		var card_parent: Node = card_dragging.get_parent()
+		if (card_parent.get_child(card_parent.get_child_count() - 1) != card_dragging):
+			card_parent.move_child(card_dragging, card_parent.get_child_count() - 1)
 		card_dragging.global_position.x = mouse_position.x
 		card_dragging.global_position.y = mouse_position.y
+
+func process_release_system():
+	if (card_dragging && card_released):
+		if (cards_hovering.size() > 1):
+			var card_drop: Card = cards_hovering[1]
+			print(cards_hovering)
+			print(card_drop)
+			if (card_drop.suit == "Spades"):
+				print("test")
+				card_dragging.global_position = card_drop.global_position - Vector2(0, -60)
+			else:
+				card_dragging.global_position = card_dragging_previous_position
+		else:
+			card_dragging.global_position = card_dragging_previous_position
+		card_dragging = null
+		card_released = null
 
 func process_cards_scaling():
 	for card in all_interactables:
